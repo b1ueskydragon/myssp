@@ -1,4 +1,4 @@
-@(message: String)(implicit assetsFinder: AssetsFinder)
+@(dspId: String)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,8 +6,8 @@
         <title>"my ssp"</title>
     </head>
     <body>
-        @message
+        <p>dsp id : @dspId</p>
+        <p>↓↓↓ ad belows ↓↓↓</p>
+        <img src="/assets/images/boars/@dspId-img.jpg">
     </body>
 </html>
-
-
