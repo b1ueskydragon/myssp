@@ -9,7 +9,6 @@ class CreativeService @Inject()(
 
   def isDeliverable(dspId: String): Boolean = repository.deliveryStatus(dspId.toLong) == "yes"
 
-  def maxBidCreativeId(ads: Seq[DspCreative]): Long = ads.maxBy(_.bid).dspId
+  def auctionByBid(ads: Seq[DspCreative]): Long = ads.maxBy(_.bid).dspId
 
 }
-

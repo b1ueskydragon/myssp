@@ -6,6 +6,7 @@ import slick.jdbc.MySQLProfile.api._
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext}
 
+// TODO cache data and scheduling
 @Singleton
 class CreativeRepository @Inject()(implicit ec: ExecutionContext) {
 
@@ -15,5 +16,6 @@ class CreativeRepository @Inject()(implicit ec: ExecutionContext) {
 
   private def f(id: Long) = db.run(query(id))
 
-  def deliveryStatus(id: Long) = Await.result(f(id), Duration.Inf).head
+  def deliveryStatus(id: Long): String = Await.result(f(id), Duration.Inf).head
+
 }
