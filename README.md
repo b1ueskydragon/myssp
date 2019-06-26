@@ -1,55 +1,46 @@
-# play-scala-starter-example
+# my ssp
 
-This is a starter application that shows how Play works.  Please see the documentation at <https://www.playframework.com/documentation/latest/Home> for more details.
+### Updated 2019.06.26
+
+simply ssp service that select a dsp request by max bid value.
+
+```bash
+[debug] application - bidders : DspCreative(3,0.6862339310023797),DspCreative(1,0.7136300908454235),DspCreative(4,0.02866696117622103)
+[debug] application - winner dsp : 1
+[debug] application - bidders : DspCreative(3,0.7699494301326313),DspCreative(1,0.5012062772576434),DspCreative(4,0.1072880596640099)
+[debug] application - winner dsp : 3
+```
+
+Framework, based by <a href="https://github.com/b1ueskydragon/play-samples/tree/2.7.x/play-scala-starter-example">play-scala-starter-example.</a>
 
 ## Running
 
-Run this using [sbt](http://www.scala-sbt.org/).  If you downloaded this project from <http://www.playframework.com/download> then you'll find a prepackaged version of sbt in the project directory:
-
 ```bash
-sbt run
+$ sbt run
 ```
 
-And then go to <http://localhost:9000> to see the running web application.
+## MySQL
 
-There are several demonstration files available in this template.
+```bash
+$ mysql.server start
+$ mysql -uroot
+```
 
-## Controllers
+`ddl/myssp_db` provide ddl and sqls for create table and columns.
 
-- `HomeController.scala`:
+## Ad site
 
-  Shows how to handle simple HTTP requests.
+http://localhost:9000/creative
 
-- `AsyncController.scala`:
+## Remarks
 
-  Shows how to do asynchronous programming when handling a request.
+### Ad Flows
+1. Ad request, <b>Site -> SSP</b>
+2. Bid request (with several info that helps response appropriate), <b>SSP -> DSP</b>
+3. Bid response (with several info includes bid value), <b>DSP -> SSP</b>
+4. A response has max bid selected by SSP. Ad response, <b>SSP -> Site</b>
 
-- `CountController.scala`:
-
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
-
-## Components
-
-- `Module.scala`:
-
-  Shows how to use Guice to bind all the components needed by your application.
-
-- `Counter.scala`:
-
-  An example of a component that contains state, in this case a simple counter.
-
-- `ApplicationTimer.scala`:
-
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-## Filters
-
-- `Filters.scala`:
-
-  Creates the list of HTTP filters used by your application.
-
-- `ExampleFilter.scala`:
-
-  A simple filter that adds a header to every response.
+At this time,
+- Step 3 and 4 only Implemented
+- a fake bid value is generated inside randomly :p
+- automatic generation of DB / table is not available
