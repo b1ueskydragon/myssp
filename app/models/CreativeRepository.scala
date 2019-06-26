@@ -10,9 +10,10 @@ import scala.concurrent.{Await, ExecutionContext}
 class CreativeRepository @Inject()(implicit ec: ExecutionContext) {
 
   private val db = Database.forConfig("db.default")
-  private val query = sql"SELECT id, name FROM creative".as[(Long, String)]
-  private val f = db.run(query)
 
-  val selectedCreatives: Map[Long, String] = Await.result(f, Duration.Inf).toMap
+  private def query(id: Long) = sql"SELECT is_deliverable FROM creative where id = $id".as[String]
 
+  private def f(id: Long) = db.run(query(id))
+
+  def status(id: Long) = Await.result(f(id), Duration.Inf).head
 }

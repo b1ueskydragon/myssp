@@ -1,23 +1,15 @@
 package services
 
-import java.util.Random
-
 import javax.inject.{Inject, Singleton}
-import models.CreativeRepository
-import play.api.libs.ws.WSResponse
+import models.{CreativeRepository, DspCreative}
 
 @Singleton
 class CreativeService @Inject()(
-  repository: CreativeRepository,
-  random: Random) {
+  repository: CreativeRepository) {
 
-  def creatives: Map[Long, String] = repository.selectedCreatives
+  def deliveryStatus(dspId: String): String = repository.status(dspId.toLong)
 
-  def getRandomIndex(seed: Int): Int = random.nextInt(seed) + 1
-
-  // TODO random to max
-  def auction(dspCreatives: Seq[WSResponse]): WSResponse = {
-    dspCreatives(getRandomIndex(dspCreatives.length - 1))
-  }
+  def maxBidCreativeId(ads: Seq[DspCreative]): Long = ads.maxBy(_.bid).dspId
 
 }
+

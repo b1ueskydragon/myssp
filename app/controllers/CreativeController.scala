@@ -1,6 +1,10 @@
 package controllers
 
+import java.util.Random
+
 import javax.inject.{Inject, Singleton}
+import models.DspCreative
+import play.api.Logger
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc._
 import services.CreativeService
@@ -12,21 +16,36 @@ import scala.concurrent.{Await, Future}
 class CreativeController @Inject()(
   cc: ControllerComponents,
   ws: WSClient,
-  service: CreativeService)
+  service: CreativeService,
+  random: Random)
   (implicit assetsFinder: AssetsFinder) extends AbstractController(cc) {
+
+  private val logger = Logger.logger
 
   def creative = Action {
 
-    // 入札額(ランダム生成)を一緒に送信して, maxValue を選ぶ
-    def futureRes(dspId: Long): Future[WSResponse] =
-      ws.url(s"http://localhost:9000/request/$dspId").get
+    def futureRes(ads: DspCreative): Future[WSResponse] =
+      ws.url(s"http://localhost:9000/request/${ads.dspId}").get
 
-    val dspCreatives = service.creatives.keySet.map(dspId =>
-      Await.result(futureRes(dspId), Duration.Inf)).toSeq
+    /**  bidding (dsp) request accepted */
+    val res1 = Await.result(futureRes(DspCreative(1, random.nextDouble)), Duration.Inf)
+    val res2 = Await.result(futureRes(DspCreative(2, random.nextDouble)), Duration.Inf) // NOT deliverable
+    val res3 = Await.result(futureRes(DspCreative(3, random.nextDouble)), Duration.Inf)
+    val res4 = Await.result(futureRes(DspCreative(4, random.nextDouble)), Duration.Inf)
 
-    val winnerId = service.auction(dspCreatives).body
+    val responses = Seq(res1, res2, res3, res4)
 
-    Ok(views.html.creative(winnerId))
+    /** at this time, mocked bid value generated in here. */
+    val dsps = responses.filter(res => service.deliveryStatus(res.body) == "yes")
+      .map(res => DspCreative(res.body.toLong, random.nextDouble))
+
+    logger.debug(s"bidders : ${dsps.mkString}")
+
+    val i = service.maxBidCreativeId(dsps).toString
+
+    logger.debug(s"winner dsp : $i")
+
+    Ok(views.html.creative(i))
 
   }
 
