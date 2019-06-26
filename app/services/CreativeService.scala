@@ -7,7 +7,7 @@ import models.{CreativeRepository, DspCreative}
 class CreativeService @Inject()(
   repository: CreativeRepository) {
 
-  def deliveryStatus(dspId: String): String = repository.status(dspId.toLong)
+  def isDeliverable(dspId: String): Boolean = repository.deliveryStatus(dspId.toLong) == "yes"
 
   def maxBidCreativeId(ads: Seq[DspCreative]): Long = ads.maxBy(_.bid).dspId
 

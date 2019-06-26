@@ -24,28 +24,25 @@ class CreativeController @Inject()(
 
   def creative = Action {
 
-    def futureRes(ads: DspCreative): Future[WSResponse] =
-      ws.url(s"http://localhost:9000/request/${ads.dspId}").get
-
     /**  bidding (dsp) request accepted */
-    val res1 = Await.result(futureRes(DspCreative(1, random.nextDouble)), Duration.Inf)
-    val res2 = Await.result(futureRes(DspCreative(2, random.nextDouble)), Duration.Inf) // NOT deliverable
-    val res3 = Await.result(futureRes(DspCreative(3, random.nextDouble)), Duration.Inf)
-    val res4 = Await.result(futureRes(DspCreative(4, random.nextDouble)), Duration.Inf)
+    val res1 = Await.result(ws.url(s"http://localhost:9000/request/1").get, Duration.Inf)
+    val res2 = Await.result(ws.url(s"http://localhost:9000/request/2").get, Duration.Inf) // NOT deliverable
+    val res3 = Await.result(ws.url(s"http://localhost:9000/request/3").get, Duration.Inf)
+    val res4 = Await.result(ws.url(s"http://localhost:9000/request/4").get, Duration.Inf)
 
     val responses = Seq(res1, res2, res3, res4)
 
     /** at this time, mocked bid value generated in here. */
-    val dsps = responses.filter(res => service.deliveryStatus(res.body) == "yes")
+    val dspAds = responses.filter(res => service.isDeliverable(res.body))
       .map(res => DspCreative(res.body.toLong, random.nextDouble))
 
-    logger.debug(s"bidders : ${dsps.mkString}")
+    logger.debug(s"bidders : ${dspAds.mkString(",")}")
 
-    val i = service.maxBidCreativeId(dsps).toString
+    val winnerId = service.maxBidCreativeId(dspAds).toString
 
-    logger.debug(s"winner dsp : $i")
+    logger.debug(s"winner dsp : $winnerId")
 
-    Ok(views.html.creative(i))
+    Ok(views.html.creative(winnerId))
 
   }
 

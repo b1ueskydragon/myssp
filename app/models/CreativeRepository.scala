@@ -15,5 +15,5 @@ class CreativeRepository @Inject()(implicit ec: ExecutionContext) {
 
   private def f(id: Long) = db.run(query(id))
 
-  def status(id: Long) = Await.result(f(id), Duration.Inf).head
+  def deliveryStatus(id: Long) = Await.result(f(id), Duration.Inf).head
 }
