@@ -18,8 +18,7 @@ class CreativeController @Inject()(
   cc: ControllerComponents,
   service: CreativeService,
   dspRequest: RequestFactory,
-  random: Random)
-  (implicit assetsFinder: AssetsFinder) extends AbstractController(cc) {
+  random: Random) extends AbstractController(cc) {
 
   private val logger = Logger.logger
 
@@ -27,7 +26,7 @@ class CreativeController @Inject()(
 
   def creative = Action {
 
-    /**  bidding (dsp) request accepted */
+    /** bidding (dsp) request accepted */
     val responses = dspRequest.fakeRequests.map(toResponse)
 
     /** at this time, mocked bid value generated in here. */
