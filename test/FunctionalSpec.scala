@@ -4,10 +4,7 @@ import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-/**
-  * Functional tests start a Play application internally, available
-  * as `app`.
-  */
+/** Functional tests start a Play application internally, available as `app`. */
 class FunctionalSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "Routes" should {
@@ -43,4 +40,24 @@ class FunctionalSpec extends PlaySpec with GuiceOneAppPerSuite {
     }
 
   }
+
+  "RequestController" should {
+
+    "return the dspId requested by numeric parameter" in {
+      contentAsString(route(app, FakeRequest(GET, s"/request/3")).get) mustBe "3"
+      route(app, FakeRequest(GET, s"/request/a")).map(status(_)) mustBe Some(BAD_REQUEST)
+    }
+
+  }
+
+  "CreativeController" should {
+
+    "return the winner id" in {
+      val page = contentAsString(route(app, FakeRequest(GET, s"/creative")).get)
+      page must include("dsp id")
+      page must include("img src")
+    }
+
+  }
+
 }
