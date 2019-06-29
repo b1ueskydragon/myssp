@@ -45,6 +45,9 @@ class FunctionalSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "return the dspId requested by numeric parameter" in {
       contentAsString(route(app, FakeRequest(GET, s"/request/3")).get) mustBe "3"
+    }
+
+    "return the status 400 if parameter is the other type" in {
       route(app, FakeRequest(GET, s"/request/a")).map(status(_)) mustBe Some(BAD_REQUEST)
     }
 
@@ -52,7 +55,7 @@ class FunctionalSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   "CreativeController" should {
 
-    "return the winner id" in {
+    "return the page that includes dsp id and creative image slot" in {
       val page = contentAsString(route(app, FakeRequest(GET, s"/creative")).get)
       page must include("dsp id")
       page must include("img src")
