@@ -12,6 +12,7 @@ libraryDependencies += guice
 libraryDependencies += ws
 libraryDependencies += jdbc
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test
+libraryDependencies += "org.mockito" %% "mockito-scala" % "1.5.11" % Test
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.2.1"
 libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.13"
 libraryDependencies += "org.joda" % "joda-convert" % "1.8"
