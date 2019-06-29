@@ -20,12 +20,47 @@ $ sbt run
 ```
 
 ## MySQL
+### case mysql 5.6
+install on mac os
+```bash
+$ brew install mysql@5.6
+$ 'export PATH="/usr/local/opt/mysql@5.6/bin:$PATH"' >> ~/.bash_profile
+$ export LDFLAGS="-L/usr/local/opt/mysql@5.6/lib"
+$ export CPPFLAGS="-I/usr/local/opt/mysql@5.6/include"
+```
 
+`build.sbt`
+```scala
+libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.34"
+```
+
+### case mysql 8.0.13 ~
+install on mac os
+
+```bash
+$ brew install mysql
+```
+
+`build.sbt`
+```scala
+libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.13"
+```
+
+`application.conf`
+```bash
+# db.default
+# add param sslMode=DISABLED
+
+    url = "jdbc:mysql://localhost/myssp_db?sslMode=DISABLED& ... "
+```
+
+### start
 ```bash
 $ mysql.server start
 $ mysql -uroot
 ```
 
+### tables
 `ddl/myssp_db` provide ddl and sqls for create table and columns.
 
 ## Ad site
